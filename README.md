@@ -1,66 +1,67 @@
 # QR API
 
-## Descripción
+## Description
 
-API creada con lenguaje de porgramacion python usando la libreria Flask, para la generacionde codigos QR para la identificación de diferentes establecimientos, como lo pueden ser edificios de oficinas, universidades, centros comerciales, locales comerciales, centros turisticos entre otros. Adicionalmente la api permite registrar todas las personas que leen por medio de sus smartphone los codigos QR generados. estos datos son guardados en una base de datos posgrestql.
+API created with python programming language using the Flask library, for the generation of QR codes for the identification of different establishments, such as office buildings, universities, shopping centers, commercial premises, tourist centers among others. Additionally, the api allows registering all the people who read the generated QR codes through their smartphone. these data are stored in a posgrestql database.
 
-Adicionalmente el presente repositorio cuenta con el codigo de una aplicacion movil desarrollada en android studio que consta de un formulario que permite adquirir los datos basicos del estado de los usuarios, posterior a esto permite escanear los codigos QR generados a travez de la API y por medio  de app enviarla informacion del formulario y el registro de lectura del QR a la base de datos.
+Additionally, this repository has the code of a mobile application developed in android studio that consists of a form that allows to acquire the basic data of the status of the users, after this it allows scanning the QR codes generated through the API and through From app send the information of the form and the reading record of the QR to the database.
 
-Estos codigos se desarrollaron para ser utlizados en el contexto de la pandemia COVID-19 con una alternativa al control y registro de ocupacion en los diferentes lugares de la ciudades con el fin de poder generar datos de utidad para los procesos de analisis de datos y toma de desiciones.
+These codes were developed to be used in the context of the COVID-19 pandemic with an alternative to the control and registration of occupation in different places in the cities in order to be able to generate useful data for the data analysis and capture processes. of decisions.
 
 ![Explanations Image](https://github.com/davidluna-fn/QR_api/blob/master/esquema%20de%20funcionamiento.png)
 
-## Instalacion y configuracion
+## Installation and configuration
 
-### Configuracion de la API
+### API configuration
 
-El primero paso para la instalacion es clonar este repositorio o descargarlo desde la interfaz web
-
+The first step for the installation is to clone this repository or download it from the web interface
 ```
 git clone https://github.com/davidluna-fn/QR_api
 ```
 
-el segundo paso requiere la instalacion de pgAdmin y posgrestql para la gestion y manejo de las base de datos a utilizar en para guardar la informacio. Para descargarlo entrar al siguiente enlace https://www.postgresql.org/download/ y seleccionar la opcion necesaria para nuestro equipo. Posterior a esto ejecutar el instalador, aceptar los permisos requeridos y continuar con la instalacion. Al ejecutar por primera vez el programa requiere una contraseña de usuario.
-
+The second step requires the installation of pgAdmin and posgrestql for the management and handling of the databases to be used to save the information. To download it, go to the following link https://www.postgresql.org/download/ and select the necessary option for our team. After this, run the installer, accept the required permissions and continue with the installation. When running for the first time the program requires a user password.
 Despues de esto se debe crear una base de datos con el nombre de ubicaciones. Posteriormente se configurar la variable SQLALCHEMY_DATABASE_URI del archivo config.py en la carpeta /ubicaciones-restapi, dicha variable debe quedar con una configuracion del siguiente estilo 'postgresql://usuario:constraseña@direccion_de_la_db'
 
-para ejecutar la API se debe instalar los requerimientos con el siguiente comando:
-
+To run the API you must install the requirements with the following command:
 ```
 pip install -r requirements.txt
 ```
 
-por ultimo esl siguiente paso es ejecutar el servidor con el siguiente comando:
+Finally, the next step is to run the server with the following command:
+
 ```
 python app.py 
 ```
 
-### Configuracion app movil 
+### Mobile app configuration
 
-El proyecto de la app movil requiere el uso de android studio es cual se puede descargar desde el siguiente enlace https://developer.android.com/studio?hl=es-419 y se realiza la configuracion por defecto del instalador.
-Al ejecutar el programa se debe cargar el proyecto seleccionando la carpeta LectorQR y despues se debe configurar la ruta del servidor donde esta corriendo la API y por ultimo compilar el proyecto e instalarlo en el celular.
+The mobile app project requires the use of android studio, which can be downloaded from the following link https://developer.android.com/studio?hl=es-419 and the default installer configuration is carried out.
+When executing the program, you must load the project by selecting the LectorQR folder and then you must configure the path of the server where the API is running and finally compile the project and install it on the cell phone.
 
-## Rutas de la API
+## API paths
 
-- '/api/v1/ubicaciones/', methods=['POST'] registra la posicion de un usuario en un punto especifico donde realiza la lectura del codigo QR. 
-parametros requeridos:
-  - id_place : se adquiere automaticamente del codigo QR leido por la aplicación.
-  - id_device : se adquiere automaticamente por la app como identificador del dispositivo movil utilizado.
-  - phone: se adquiere del formulario que se llena al usar la app para escanear un codigo.
-  - form1: respuesta a la pregunta 1 del formulario que se llena al usar la app para escanear un codigo.
-  - form2: respuesta a la pregunta 2 del formulario que se llena al usar la app para escanear un codigo.
-  - form3: respuesta a la pregunta 3 del formulario que se llena al usar la app para escanear un codigo.
+- '/api/v1/ubicaciones/', methods=['POST'] registers the position of a user at a specific point where the QR code is read.
 
-- '/api/v1/ubicaciones', methods=['GET'] : devuelve todos los registros de usuarios que por medio de la aplicacion han leido el codigo QR en determinada ubicacion, en formato json.
+required parameters:
+  - id_place : It is automatically acquired from the QR code read by the application.
+  - id_device : It is acquired automatically by the app as an identifier of the mobile device used.
+  - phone: It is acquired from the form that is filled out when using the app to scan a code.
+  - form1: Answer to question 1 of the form that is filled when using the app to scan a code.
+  - form2: Answer to question 2 of the form that is filled when using the app to scan a code.
+  - form3: Answer to question 3 of the form that is filled when using the app to scan a code.
 
-- '/api/v1/qrcode/<filename>', methods=['GET'] : devuelve un codigo codigo QR especifico correspondiente al id suministrado  con la informacion suministrada para el registro de locales en la ciudad.
+- '/api/v1/ubicaciones', methods=['GET'] : It returns all the user records that through the application have read the QR code in a certain location, in json format.
+
+- '/api/v1/qrcode/<filename>', methods=['GET'] : Returns a specific QR code corresponding to the id supplied with the information supplied for the registration of premises in the city.
   
-- '/api/v1/qrcode/', methods=['POST']: devuelve el codigo QR generado con la informacion suministrada para el registro de locales en la ciudad.
-parametros requeridos:
-  - name: Nombre del lugar a registrar para generar el codigo QR.
-  - address: direccion del lugar a registrar para generar el codigo QR.
-  - coordinate_N: coordenada norte del lugar a registrar para generar el codigo QR.
-  - coordinate_W: coordenada este del lugar a registrar para generar el codigo QR.
-  - tipo: tipo de lugar a registrar para generar el codigo QR.
+- '/api/v1/qrcode/', methods=['POST']: Returns the QR code generated with the information provided for the registration of premises in the city.
+
+
+required parameters:
+  - name: Name of the place to register to generate the QR code.
+  - address: address of the place to register to generate the QR code.
+  - coordinate_N: North coordinate of the place to be registered to generate the QR code.
+  - coordinate_W: East coordinate of the place to be registered to generate the QR code.
+  - tipo: type of place to register to generate the QR code.
 
 
